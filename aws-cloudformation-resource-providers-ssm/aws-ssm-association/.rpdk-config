@@ -1,0 +1,15 @@
+{
+    "typeName": "AWS::SSM::Association",
+    "language": "java",
+    "runtime": "java8",
+    "entrypoint": "com.amazonaws.ssm.association.HandlerWrapper::handleRequest",
+    "testEntrypoint": "com.amazonaws.ssm.association.HandlerWrapper::testEntrypoint",
+    "settings": {
+        "namespace": [
+            "com",
+            "amazonaws",
+            "ssm",
+            "association"
+        ]
+    }
+}

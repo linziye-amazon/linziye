@@ -1,0 +1,26 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      java: openjdk8
+      python: 3.7
+    commands:
+      pip install pre-commit
+  build:
+    commands:
+      # pre-build check for commit hooks
+      - pre-commit run --all-files
+      # install internal SDK
+      - >
+        mvn org.apache.maven.plugins:maven-install-plugin:3.0.0-M1:install-file
+        --batch-mode
+        --no-transfer-progress
+        -Dfile="$CODEBUILD_SRC_DIR_SDK/cloudformation-2.8.1.jar"
+      # install aws-cloudformation-rpdk
+      - pip install cloudformation-cli cloudformation-cli-java-plugin
+      # end-to-end test child repo(s)
+      - cd "$CODEBUILD_SRC_DIR"
+      - cd aws-ssm-association
+      - mvn clean verify --no-transfer-progress
+    finally:
+      - cat "$CODEBUILD_SRC_DIR/aws-ssm-association/rpdk.log"
